@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={workSans.className}>
+    <html lang='en' className={workSans.className}>
       <body>{children}</body>
     </html>
   );
