@@ -65,13 +65,13 @@ export const stepsText: { [key: string]: StepText } = {
     ],
   ],
   stepNineText: [['Whoa! That was cool, keep going.']],
-  stepTenText: [
+  stepTenText: [['More!']],
+
+  stepElevenText: [
     [
-      'More!'
+      "Ok ok. Let's stop here.",
+      'Look at all those pieces. Big ones, little ones, all kinds of pieces!',
+      'You really smashed that thing to smithereens.',
     ],
   ],
-
-  stepElevenText: [["Ok ok. Let's stop here.",
-  'Look at all those pieces. Big ones, little ones, all kinds of pieces!',
-  'You really smashed that thing to smithereens.',]],
 };
