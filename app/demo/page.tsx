@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import FractionsWidget from '../components/fractions-widget';
+import { FractionsWidget } from '../components/fractions-widget';
 
 export default function Home() {
   const [sessionStarted, setSessionStarted] = useState(false);
@@ -32,7 +32,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <FractionsWidget className='w-80' />
+          <FractionsWidget className='' />
         )}
       </div>
     </>
