@@ -51,9 +51,7 @@ export const stepsText: { [key: string]: StepText } = {
       "So maybe that's what you were thinking.",
     ],
   ],
-  stepFivePathTwoText: [],
   stepSixPathOneText: [['But I was thinking of the one big blue square.']],
-  stepSixPathTwoText: [],
   stepSevenPathOneText: [
     ["So let's say we have 1 big, beautiful, blue square.", 'We might even call it one whole blue square.'],
   ],
@@ -66,14 +64,14 @@ export const stepsText: { [key: string]: StepText } = {
       "Don't worry. It's for educational purposes.",
     ],
   ],
-  stepNineText: [['Whoa! That was cool, keep going.'], ['More!']],
+  stepNineText: [['Whoa! That was cool, keep going.']],
   stepTenText: [
     [
-      "Ok ok. Let's stop here.",
-      'Look at all those pieces. Big ones, little ones, all kinds of pieces!',
-      'You really smashed that thing to smithereens.',
+      'More!'
     ],
   ],
 
-  stepElevenText: [[]],
+  stepElevenText: [["Ok ok. Let's stop here.",
+  'Look at all those pieces. Big ones, little ones, all kinds of pieces!',
+  'You really smashed that thing to smithereens.',]],
 };
