@@ -7,3 +7,13 @@
     text-wrap: balance;
   }
 }
+
+input[type="number"].hideNumberInputArrows::-webkit-inner-spin-button,
+input[type="number"].hideNumberInputArrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"].hideNumberInputArrows {
+  -moz-appearance: textfield;
+}
