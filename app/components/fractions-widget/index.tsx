@@ -1,11 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { RocketLaunchIcon, Cog6ToothIcon } from '@heroicons/react/20/solid';
+import { RocketLaunchIcon, Cog6ToothIcon, ArrowDownIcon, ArrowRightIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import fractionsWithHammerImage from '../../../public/fractions_hammer.png';
 import { stepsText, StepText } from './lesson-steps';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface FractionsWidgetProps {
   className?: string;
@@ -35,14 +35,56 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
     {
       stepPath: [stepsText.stepTwoPathOneText, stepsText.stepTwoPathTwoText],
       stepCta: (
-        <OptionButtons 
+        <OptionButtons
           options={['No. What are those?', 'Yep, sure have.']}
           setOptionChoice={setOptionChoice}
           currentStepIndex={currentStepIndex}
           setCurrentStepIndex={setCurrentStepIndex}
         />
-      )
-    }
+      ),
+    },
+    {
+      stepPath: [stepsText.stepThreePathOneText, stepsText.stepThreePathTwoText],
+      stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+    },
+    {
+      stepPath: [stepsText.stepFourPathOneText, stepsText.stepFourPathTwoText],
+      stepCta: (
+        <NumericInputForm
+          setOptionChoice={setOptionChoice}
+          currentStepIndex={currentStepIndex}
+          setCurrentStepIndex={setCurrentStepIndex}
+        />
+      ),
+    },
+    {
+      stepPath: [stepsText.stepFivePathOneText],
+      stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+    },
+    {
+      stepPath: [stepsText.stepSixPathOneText],
+      stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+    },
+    {
+      stepPath: [stepsText.stepSevenPathOneText, stepsText.stepSevenPathTwoText],
+      stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+    },
+    {
+      stepPath: [stepsText.stepEightText],
+      stepCta: <></>,
+    },
+    {
+      stepPath: [stepsText.stepNineText],
+      stepCta: <></>,
+    },
+    {
+      stepPath: [stepsText.step10Text],
+      stepCta: <></>,
+    },
+    {
+      stepPath: [stepsText.stepElevenText],
+      stepCta: <></>,
+    },
   ];
 
   return (
@@ -64,10 +106,10 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
             return (
               <>
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className='text-white'
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 10 }}
+                  transition={{ duration: 0.75 }}
+                  className='text-white text-left'
                 >
                   <div className='mb-8'>
                     {stepText.map((stepSubtextItem, i) => (
@@ -96,11 +138,64 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
   );
 };
 
-interface OptionButtonsProps {
-  options: string[];
-  setOptionChoice: React.Dispatch<React.SetStateAction<number>>;
+interface ContinueButtonProps {
   currentStepIndex: number;
   setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const ContinueButton = ({ currentStepIndex, setCurrentStepIndex }: ContinueButtonProps): JSX.Element => {
+  const buttonClickHandler = (): void => {
+    setCurrentStepIndex(currentStepIndex + 1);
+  };
+  return (
+    <div className='flex items-end'>
+      <button className='rounded-2xl bg-strong-blue text-white p-3' onClick={() => buttonClickHandler()}>
+        <ArrowDownIcon className='w-5 h-5' />
+      </button>
+    </div>
+  );
+};
+
+interface NumericInputFormProps extends ContinueButtonProps {
+  setOptionChoice: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const NumericInputForm = ({ currentStepIndex, setCurrentStepIndex, setOptionChoice }: NumericInputFormProps) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    const numericValue = parseInt(inputValue, 10);
+    if (numericValue === 1) {
+      setOptionChoice(1);
+      setCurrentStepIndex(6);
+    } else {
+      setOptionChoice(0);
+      setCurrentStepIndex(currentStepIndex + 1);
+    }
+  };
+
+  return (
+      <form onSubmit={handleSubmit} className='flex w-full justify-between text-white'>
+        <input
+          id='numericInput'
+          type='number'
+          value={inputValue}
+          placeholder='Enter a number...'
+          onChange={(e) => setInputValue(e.target.value)}
+          required
+          className='hideNumberInputArrows rounded-lg border border-strong-blue bg-strong-blue bg-opacity-30 pl-3 py-2'
+        />
+        <button type='submit' className='rounded-2xl bg-strong-blue text-white p-3'>
+          <ArrowRightIcon className='w-5 h-5'/>
+        </button>
+      </form>
+  );
+};
+
+interface OptionButtonsProps extends NumericInputFormProps {
+  options: string[];
 }
 
 const OptionButtons = ({
@@ -117,7 +212,11 @@ const OptionButtons = ({
     <>
       <div className='flex flex-col gap-y-3'>
         {options.map((option, ind) => (
-          <button className='rounded-2xl border border-strong-blue bg-strong-blue bg-opacity-30 text-white text-lg p-3 pr-10 w-fit max-w-[80%]' key={ind} onClick={() => buttonClickHandler(ind)}>
+          <button
+            className='rounded-2xl border border-strong-blue bg-strong-blue bg-opacity-30 text-white text-lg p-3 pr-10 w-fit max-w-[80%]'
+            key={ind}
+            onClick={() => buttonClickHandler(ind)}
+          >
             {option}
           </button>
         ))}
