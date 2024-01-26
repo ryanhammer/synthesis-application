@@ -32,7 +32,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <FractionsWidget className='' />
+          <FractionsWidget className='w-[90%]' />
         )}
       </div>
     </>
