@@ -24,7 +24,7 @@ export const InteractiveSquare = ({
   const [lines, setLines] = useState<Line[]>([]);
   const [nextLineType, setNextLineType] = useState<'horizontal' | 'vertical'>('horizontal');
 
-  if (lineCount === 0 && lines.length > 0) setLines([]); 
+  if (lineCount === 0 && lines.length > 0) setLines([]);
 
   const addLine = (event: React.MouseEvent<HTMLDivElement>) => {
     if (lineCount === 9) return;
