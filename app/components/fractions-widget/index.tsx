@@ -1,11 +1,12 @@
 'use client';
 
+import { FormEvent, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { RocketLaunchIcon, Cog6ToothIcon, ArrowDownIcon, ArrowRightIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import fractionsWithHammerImage from '../../../public/fractions_hammer.png';
 import { stepsText, StepText } from './lesson-steps';
-import { FormEvent, useState, useEffect, useMemo } from 'react';
+import { InteractiveSquare } from './interactive-square';
 
 interface FractionsWidgetProps {
   className?: string;
@@ -20,6 +21,7 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [optionChoice, setOptionChoice] = useState(0);
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
+  const [shouldDisplaySquare, setShouldDisplaySquare] = useState(false);
 
   console.log(currentStepIndex, currentPartIndex);
 
@@ -33,7 +35,6 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
             setOptionChoice={setOptionChoice}
             currentStepIndex={currentStepIndex}
             setCurrentStepIndex={setCurrentStepIndex}
-            
           />
         ),
       },
@@ -45,19 +46,12 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
             setOptionChoice={setOptionChoice}
             currentStepIndex={currentStepIndex}
             setCurrentStepIndex={setCurrentStepIndex}
-            
           />
         ),
       },
       {
         stepPath: [stepsText.stepThreePathOneText, stepsText.stepThreePathTwoText],
-        stepCta: (
-          <ContinueButton
-            currentStepIndex={currentStepIndex}
-            setCurrentStepIndex={setCurrentStepIndex}
-            
-          />
-        ),
+        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
       },
       {
         stepPath: [stepsText.stepFourPathOneText, stepsText.stepFourPathTwoText],
@@ -66,55 +60,36 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
             setOptionChoice={setOptionChoice}
             currentStepIndex={currentStepIndex}
             setCurrentStepIndex={setCurrentStepIndex}
-            
           />
         ),
       },
       {
         stepPath: [stepsText.stepFivePathOneText],
-        stepCta: (
-          <ContinueButton
-            currentStepIndex={currentStepIndex}
-            setCurrentStepIndex={setCurrentStepIndex}
-            
-          />
-        ),
+        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
       },
       {
         stepPath: [stepsText.stepSixPathOneText],
-        stepCta: (
-          <ContinueButton
-            currentStepIndex={currentStepIndex}
-            setCurrentStepIndex={setCurrentStepIndex}
-            
-          />
-        ),
+        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
       },
       {
         stepPath: [stepsText.stepSevenPathOneText, stepsText.stepSevenPathTwoText],
-        stepCta: (
-          <ContinueButton
-            currentStepIndex={currentStepIndex}
-            setCurrentStepIndex={setCurrentStepIndex}
-            
-          />
-        ),
+        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
       },
       {
         stepPath: [stepsText.stepEightText],
-        stepCta: <></>,
+        stepCta: <div className='hidden'>Space</div>,
       },
       {
         stepPath: [stepsText.stepNineText],
-        stepCta: <></>,
+        stepCta: <div className='hidden'>Space</div>,
       },
       {
         stepPath: [stepsText.step10Text],
-        stepCta: <></>,
+        stepCta: <div className='hidden'>Space</div>,
       },
       {
         stepPath: [stepsText.stepElevenText],
-        stepCta: <></>,
+        stepCta: <div className='hidden'>Space</div>,
       },
     ],
     [currentStepIndex]
@@ -125,10 +100,14 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
   }, [currentStepIndex]);
 
   useEffect(() => {
+    if (currentStepIndex === 3 && currentPartIndex === steps[3].stepPath[optionChoice].length - 1) {
+      setShouldDisplaySquare(true);
+    }
+
     if (currentPartIndex < steps[currentStepIndex].stepPath[optionChoice].length - 1) {
       const timeoutId = setTimeout(() => {
         setCurrentPartIndex((prevIndex) => prevIndex + 1);
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timeoutId);
     }
@@ -152,24 +131,24 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
           {steps[currentStepIndex].stepPath[optionChoice].map((stepText, i) => {
             return (
               <>
-                  {currentPartIndex === i && (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 0 }}
-                      animate={{ opacity: 1, y: 10 }}
-                      transition={{ duration: 0.75 }}
-                      className='text-white text-left'
-                      exit={{x: -300, opacity: 0}}
-                    >
-                      <div className='mb-8'>
-                        {stepText.map((stepSubtextItem, i) => (
-                          <p key={i} className='mb-4'>
-                            {stepSubtextItem}
-                          </p>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
+                {currentPartIndex === i && (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 0 }}
+                    animate={{ opacity: 1, y: 10 }}
+                    transition={{ duration: 0.75 }}
+                    className='text-white text-left'
+                    exit={{ x: -300, opacity: 0 }}
+                  >
+                    <div className='mb-8'>
+                      {stepText.map((stepSubtextItem, i) => (
+                        <p key={i} className='mb-4'>
+                          {stepSubtextItem}
+                        </p>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </>
             );
           })}
@@ -182,13 +161,15 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
         <div className='text-white'> {/* Synthesis logo here */} </div>
       </div>
 
-      <div className='w-3/4 h-full flex flex-col bg-white m-3 rounded-lg justify-center items-start p-3'>
-        <div className='w-full h-full flex flex-col items-center bg-white'>
-        {currentStepIndex < 3 ? (
-        <div>
-          <Image src={fractionsWithHammerImage} alt='Fractions with hammer logo' />
-          </div>
-            ) : <SquareToHammer />}
+      <div className='w-3/4  flex flex-col bg-white m-3 rounded-lg justify-center items-start p-3'>
+        <div className={`w-full ${shouldDisplaySquare ? 'h-full' : ''} flex flex-col items-center bg-white`}>
+          {shouldDisplaySquare ? (
+            <InteractiveSquare />
+          ) : (
+            <div>
+              <Image src={fractionsWithHammerImage} alt='Fractions with hammer logo' />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -266,7 +247,7 @@ const OptionButtons = ({
     setOptionChoice(ind);
     setCurrentStepIndex(currentStepIndex + 1);
   };
-  
+
   return (
     <>
       <div className='flex flex-col gap-y-3'>
@@ -283,9 +264,3 @@ const OptionButtons = ({
     </>
   );
 };
-
-const SquareToHammer = (): JSX.Element => {
-  return (
-      <div className='flex w-full h-full bg-strong-blue'></div>
-  )
-}
