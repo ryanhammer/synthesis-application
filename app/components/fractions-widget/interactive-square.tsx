@@ -8,9 +8,23 @@ interface Line {
   type: 'horizontal' | 'vertical';
 }
 
-export const InteractiveSquare = () => {
+interface InteractiveSquareProps {
+  lineCount: number;
+  setLineCount: React.Dispatch<React.SetStateAction<number>>;
+  currentStepIndex: number;
+  setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const InteractiveSquare = ({
+  lineCount,
+  setLineCount,
+  currentStepIndex,
+  setCurrentStepIndex,
+}: InteractiveSquareProps) => {
   const [lines, setLines] = useState<Line[]>([]);
   const [nextLineType, setNextLineType] = useState<'horizontal' | 'vertical'>('horizontal');
+
+  if (lineCount === 0 && lines.length > 0) setLines([]); 
 
   const addLine = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -21,6 +35,10 @@ export const InteractiveSquare = () => {
     setLines([...lines, newLine]);
 
     setNextLineType(nextLineType === 'horizontal' ? 'vertical' : 'horizontal');
+
+    setLineCount(lineCount + 1);
+
+    if ([0, 5, 8].includes(lineCount)) setCurrentStepIndex(currentStepIndex + 1);
   };
 
   return (

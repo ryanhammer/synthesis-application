@@ -2,7 +2,13 @@
 
 import { FormEvent, useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { RocketLaunchIcon, Cog6ToothIcon, ArrowDownIcon, ArrowRightIcon } from '@heroicons/react/20/solid';
+import {
+  RocketLaunchIcon,
+  Cog6ToothIcon,
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowPathIcon,
+} from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import fractionsWithHammerImage from '../../../public/fractions_hammer.png';
 import { stepsText, StepText } from './lesson-steps';
@@ -22,6 +28,7 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
   const [optionChoice, setOptionChoice] = useState(0);
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
   const [shouldDisplaySquare, setShouldDisplaySquare] = useState(false);
+  const [lineCount, setLineCount] = useState(0);
 
   console.log(currentStepIndex, currentPartIndex);
 
@@ -51,7 +58,13 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
       },
       {
         stepPath: [stepsText.stepThreePathOneText, stepsText.stepThreePathTwoText],
-        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+        stepCta: (
+          <ContinueButton
+            currentStepIndex={currentStepIndex}
+            setCurrentStepIndex={setCurrentStepIndex}
+            setOptionChoice={setOptionChoice}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepFourPathOneText, stepsText.stepFourPathTwoText],
@@ -65,35 +78,87 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
       },
       {
         stepPath: [stepsText.stepFivePathOneText],
-        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+        stepCta: (
+          <ContinueButton
+            currentStepIndex={currentStepIndex}
+            setCurrentStepIndex={setCurrentStepIndex}
+            setOptionChoice={setOptionChoice}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepSixPathOneText],
-        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+        stepCta: (
+          <ContinueButton
+            currentStepIndex={currentStepIndex}
+            setCurrentStepIndex={setCurrentStepIndex}
+            setOptionChoice={setOptionChoice}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepSevenPathOneText, stepsText.stepSevenPathTwoText],
-        stepCta: <ContinueButton currentStepIndex={currentStepIndex} setCurrentStepIndex={setCurrentStepIndex} />,
+        stepCta: (
+          <ContinueButton
+            currentStepIndex={currentStepIndex}
+            setCurrentStepIndex={setCurrentStepIndex}
+            setOptionChoice={setOptionChoice}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepEightText],
-        stepCta: <div className='hidden'>Space</div>,
+        stepCta: (
+          <ResetButton
+            setCurrentStepIndex={setCurrentStepIndex}
+            setCurrentPartIndex={setCurrentPartIndex}
+            setLineCount={setLineCount}
+            setShouldDisplaySquare={setShouldDisplaySquare}
+            fullLessonReset={false}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepNineText],
-        stepCta: <div className='hidden'>Space</div>,
+        stepCta: (
+          <ResetButton
+            setCurrentStepIndex={setCurrentStepIndex}
+            setCurrentPartIndex={setCurrentPartIndex}
+            setLineCount={setLineCount}
+            setShouldDisplaySquare={setShouldDisplaySquare}
+            fullLessonReset={false}
+          />
+        ),
       },
       {
-        stepPath: [stepsText.step10Text],
-        stepCta: <div className='hidden'>Space</div>,
+        stepPath: [stepsText.stepTenText],
+        stepCta: (
+          <ResetButton
+            setCurrentStepIndex={setCurrentStepIndex}
+            setCurrentPartIndex={setCurrentPartIndex}
+            setLineCount={setLineCount}
+            setShouldDisplaySquare={setShouldDisplaySquare}
+            fullLessonReset={false}
+          />
+        ),
       },
       {
         stepPath: [stepsText.stepElevenText],
-        stepCta: <div className='hidden'>Space</div>,
+        stepCta: (
+          <ResetButton
+            setCurrentStepIndex={setCurrentStepIndex}
+            setCurrentPartIndex={setCurrentPartIndex}
+            setLineCount={setLineCount}
+            setShouldDisplaySquare={setShouldDisplaySquare}
+            fullLessonReset={true}
+          />
+        ),
       },
     ],
     [currentStepIndex]
   );
+
+  console.log(optionChoice, steps[currentStepIndex].stepPath[optionChoice]);
 
   useEffect(() => {
     setCurrentPartIndex(0);
@@ -158,13 +223,18 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
             </motion.div>
           )}
         </div>
-        <div className='text-white'> {/* Synthesis logo here */} </div>
+        <div className='text-white'> {/* TODO: Insert logo */} </div>
       </div>
 
       <div className='w-3/4  flex flex-col bg-white m-3 rounded-lg justify-center items-start p-3'>
         <div className={`w-full ${shouldDisplaySquare ? 'h-full' : ''} flex flex-col items-center bg-white`}>
           {shouldDisplaySquare ? (
-            <InteractiveSquare />
+            <InteractiveSquare
+              lineCount={lineCount}
+              setLineCount={setLineCount}
+              currentStepIndex={currentStepIndex}
+              setCurrentStepIndex={setCurrentStepIndex}
+            />
           ) : (
             <div>
               <Image src={fractionsWithHammerImage} alt='Fractions with hammer logo' />
@@ -179,10 +249,17 @@ export const FractionsWidget = ({ className }: FractionsWidgetProps) => {
 interface ContinueButtonProps {
   currentStepIndex: number;
   setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  setOptionChoice: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ContinueButton = ({ currentStepIndex, setCurrentStepIndex }: ContinueButtonProps): JSX.Element => {
+const ContinueButton = ({
+  currentStepIndex,
+  setCurrentStepIndex,
+  setOptionChoice,
+}: ContinueButtonProps): JSX.Element => {
   const buttonClickHandler = (): void => {
+    if (currentStepIndex === 6) setOptionChoice(0);
+
     setCurrentStepIndex(currentStepIndex + 1);
   };
 
@@ -262,5 +339,40 @@ const OptionButtons = ({
         ))}
       </div>
     </>
+  );
+};
+
+interface ResetButtonProps {
+  setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  setLineCount: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentPartIndex: React.Dispatch<React.SetStateAction<number>>;
+  setShouldDisplaySquare: React.Dispatch<React.SetStateAction<boolean>>;
+  fullLessonReset: boolean;
+}
+
+const ResetButton = ({
+  setCurrentStepIndex,
+  setLineCount,
+  setCurrentPartIndex,
+  setShouldDisplaySquare,
+  fullLessonReset,
+}: ResetButtonProps): JSX.Element => {
+  const buttonClickHandler = (): void => {
+    setLineCount(0);
+    setCurrentStepIndex(fullLessonReset ? 0 : 7);
+
+    if (fullLessonReset) {
+      setShouldDisplaySquare(false);
+      setCurrentPartIndex(0);
+    }
+  };
+
+  return (
+    <div className='flex items-end'>
+      <button className='flex gap-2 rounded-2xl bg-strong-blue text-white p-3' onClick={() => buttonClickHandler()}>
+        <ArrowPathIcon className='w-5 h-5' />
+        {fullLessonReset ? 'Reset Lesson' : 'Clear Square'}
+      </button>
+    </div>
   );
 };
