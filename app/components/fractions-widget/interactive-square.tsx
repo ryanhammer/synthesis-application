@@ -27,6 +27,8 @@ export const InteractiveSquare = ({
   if (lineCount === 0 && lines.length > 0) setLines([]); 
 
   const addLine = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (lineCount === 9) return;
+
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
